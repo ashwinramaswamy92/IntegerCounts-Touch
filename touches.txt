@@ -1,0 +1,37 @@
+let touchDelay = 3; // Adjust the delay as needed
+let lastTouchTime = 0;
+let accumulateTouch = [];
+
+function touchStarted() {
+  if (objectList.length >= 10) {
+    const paragraph = document.getElementById("paragraph");
+    paragraph.textContent = objectList + "";
+    return;
+  }
+
+  const currentTime = millis();
+  if (currentTime - lastTouchTime < touchDelay) {
+    accumulateTouch = accumulateTouch.concat(touches)
+    return; // Skip creating the object if the delay hasn't passed
+  }
+
+  lastTouchTime = currentTime;
+
+  // Create the object
+  accumulateTouch = accumulateTouch.concat(touches)
+  let n = accumulateTouch.length;
+  let new_id = objectList.length === 0 ? 0 : objectList[objectList.length - 1].objectId + 1;
+
+  let visualIntegers = new VisualIntegers();
+  visualIntegers.objectId = new_id;
+  objectList.push(visualIntegers);
+
+  if (mouseY <= height / 2) {
+    visualIntegers.currentPositiveUnits = n;
+    visualIntegers.position = [mouseX, height / 2 - visualIntegers.blockSize[1]];
+  } else {
+    visualIntegers.currentNegativeUnits = n;
+    visualIntegers.position = [mouseX, height / 2];
+  }
+  accumulateTouch = [];
+}
